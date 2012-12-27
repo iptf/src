@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.iptf.db.model.Parish;
 import com.iptf.db.model.Participant;
+import com.iptf.db.model.ParticipantProgram;
 
 public class ParticipantDAO {
 	static Logger logger = Logger.getLogger(DBConnectionFactory.class);
@@ -19,6 +19,27 @@ public class ParticipantDAO {
 			"(fname, lname, parish_id, family_name, father_name, mother_name, street_address, suite, " +
 			"city, state, zip, home_phone, cell_phone, parish_india, role_id, gender, description, email, alt_email, photo_url)" +
 			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	public static final String UPDATE_PARTICIPANT_SQL = "update participant set " +
+				"fname =?,"+ 
+				"lname=?, "+
+				"parish_id=?, "+
+				"family_name=?,"+ 
+				"father_name=?,"+ 
+				"mother_name=?,"+ 
+				"street_address=?,"+ 
+				"suite=?,"+ 
+				"city=?,"+ 
+				"state=?,"+ 
+				"zip=?,"+ 
+				"home_phone=?,"+ 
+				"cell_phone=?,"+ 	         		
+				"parish_india=?,"+ 
+				"role_id=?,"+ 
+				"gender=?,"+ 
+				"description=?,"+ 
+				"email=?,alt_email=?, photo_url=?" +
+				" where participant_id =?";
 	
 	public final String LAST_INDERT_ID_SQL = "SELECT LAST_INSERT_ID()";
 	
@@ -30,6 +51,8 @@ public class ParticipantDAO {
 			"city, state, zip, home_phone, cell_phone, parish_india, role_id, gender, description, email, alt_email, photo_url " +
 			" from participant where participant_id=?";
  
+	public final String INSERT_PARTICIPANT_PGM_SQL = "insert into participant_program " +
+			" values(?,?,?,?)";
 	
 	public int addParticipant(Participant participant){
 			
@@ -199,6 +222,102 @@ public class ParticipantDAO {
 		
 		return participantList;
 	}
+	
+
+	public int updateParticipant(Participant participant){
 		
+		int returnValue = 0;
+		
+		Connection conn = null;
+		try {
+			conn = DBConnectionFactory.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(UPDATE_PARTICIPANT_SQL);
+			stmt.setString(1, participant.getFname());
+			stmt.setString(2, participant.getLname());
+			stmt.setInt(3, participant.getParishId());
+			stmt.setString(4, participant.getFamilyName());
+			stmt.setString(5, participant.getFatherName());
+			stmt.setString(6, participant.getMotherName());
+			stmt.setString(7, participant.getStreetAddress());
+			stmt.setString(8, participant.getSuite());
+			stmt.setString(9, participant.getState());
+			stmt.setString(10, participant.getZip());
+			stmt.setString(11, participant.getHomePhone());
+			stmt.setString(12, participant.getCellPhone());
+			stmt.setString(13, participant.getHomePhone());
+			stmt.setString(14, participant.getParishIndia());
+			stmt.setString(15, participant.getRoleId());
+			stmt.setString(16, participant.getGender());
+			stmt.setString(17, participant.getDescription());
+			stmt.setString(18, participant.getEmail());
+			stmt.setString(19, participant.getAltEmail());
+			stmt.setString(20, participant.getPhotoUrl());
+			
+			stmt.setInt(21, participant.getParticipantId());
+			
+			returnValue = stmt.executeUpdate();
+			
+			
+			
+		} catch (Exception e) {
+			logger.error("Caught Exception: ", e);
+			e.printStackTrace();
+		}
+		finally{
+			if (conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	
+		return returnValue;
+		
+	}
+	
+	public void addProgramsToParticipant(int participantId, List<ParticipantProgram> programs ){
+		
+		
+		String parish = "";
+		Connection conn = null;
+		try {
+			conn = DBConnectionFactory.getConnection();
+			
+			
+			
+			PreparedStatement stmt = conn.prepareStatement(INSERT_PARTICIPANT_PGM_SQL);
+			
+			for(ParticipantProgram program:programs){
+			
+				stmt.setInt(1, participantId);
+				stmt.setInt(2, program.getProgramId());
+				stmt.setString(3, program.getTrackUrl());
+				stmt.setInt(4, program.getYear());
+				stmt.addBatch();
+			}
+	
+			
+			int[] result = stmt.executeBatch();
+			
+			
+			
+		} catch (Exception e) {
+			logger.error("Caught Exception: ", e);
+			e.printStackTrace();
+		}
+		finally{
+			if (conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 }

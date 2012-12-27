@@ -3,8 +3,10 @@
  */
 package com.iptf.db;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -12,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.iptf.db.model.Participant;
+import com.iptf.db.model.ParticipantProgram;
 
 /**
  * @author thomas
@@ -47,6 +50,20 @@ public class ParticipantDAOTest {
 		
 		assertTrue(pdao.addParticipant(p) != 0);
 	}
+	/**
+	 * Test method for {@link com.iptf.db.ParticipantDAO#addParticipant(com.iptf.db.model.Participant)}.
+	 */
+	@Test
+	public void testUpdateParticipant() {
+		
+		ParticipantDAO pdao = new ParticipantDAO();
+		Participant p = pdao.findParticipantById(3);
+		p.setDescription("Test description...." + System.currentTimeMillis());
+		int retVal = pdao.updateParticipant(p);
+		assertTrue(retVal == 1);
+		Participant p1 = pdao.findParticipantById(3);
+		assertEquals(p1.getDescription(),p.getDescription());
+	}
 	
 	@Test
 	public void testFindParticipantsByParish(){
@@ -63,6 +80,24 @@ public class ParticipantDAOTest {
 		
 		assertTrue(p.getParticipantId() == 3);
 	}
-
-
+	
+	@Test
+	public void testAddProgramsToParticipant() {
+		
+		ArrayList<ParticipantProgram> programs = new ArrayList<ParticipantProgram>();
+		
+		
+		for (int i=1; i<4; i++){
+			ParticipantProgram p = new ParticipantProgram();
+			p.setParticipantId(3);
+			p.setProgramId(i);
+			p.setTrackUrl("");
+			p.setYear(2013);
+			programs.add(p);
+		}
+	
+		ParticipantDAO pdao = new ParticipantDAO();
+		
+		pdao.addProgramsToParticipant(3, programs);
+	}
 }

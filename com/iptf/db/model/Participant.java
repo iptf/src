@@ -1,5 +1,7 @@
 package com.iptf.db.model;
 
+import java.util.List;
+
 public class Participant {
 	private int participantId;
 	private String fname;
@@ -20,6 +22,13 @@ public class Participant {
 	private String gender;
 	private String description;
 	private String email;
+	private List<ParticipantProgram> programs;
+	public List<ParticipantProgram> getPrograms() {
+		return programs;
+	}
+	public void setPrograms(List<ParticipantProgram> programs) {
+		this.programs = programs;
+	}
 	public int getParticipantId() {
 		return participantId;
 	}
