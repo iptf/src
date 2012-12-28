@@ -82,6 +82,22 @@ public class ParticipantDAOTest {
 	}
 	
 	@Test
+	public void testFindParticipantPrograms(){
+		ParticipantDAO pdao = new ParticipantDAO();
+		List <ParticipantProgram> ppList = pdao.findParticipantPrograms(2);
+		
+		assertTrue(ppList.size() == 3);
+	}
+	
+	@Test
+	public void testRemoveAllProgramsFromParticipant(){
+		ParticipantDAO pdao = new ParticipantDAO();
+		Participant p = pdao.findParticipantById(3);
+		
+		assertTrue(p.getParticipantId() == 3);
+	}
+	
+	@Test
 	public void testAddProgramsToParticipant() {
 		
 		ArrayList<ParticipantProgram> programs = new ArrayList<ParticipantProgram>();
