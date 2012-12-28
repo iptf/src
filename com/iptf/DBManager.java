@@ -4,9 +4,12 @@ package com.iptf;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+
+import com.iptf.User;
 
 public class DBManager {
 
@@ -274,6 +277,52 @@ public class DBManager {
 		}  
 	    
 	  }
+
+public static User validateUser(String email,String password){
+	    
+		Connection con =null;
+		PreparedStatement stmt = null;	
+		User user = null;
+		
+		try{
+	         	con = getLocalConnection(); 	         	
+	         	stmt = con.prepareStatement("SELECT DECODE(PASSWORD,'ABCDEFG'),role_id,fname,lname,parish,parish_name FROM user u,parish p where email=? and u.parish= p.parish_id");	     
+	         	stmt.setString(1, email);
+	            ResultSet rs = stmt.executeQuery();
+	            String pass = null;
+	            
+	            while(rs.next()){	
+	            	
+	            	pass = rs.getString(1);	   
+		            if(pass.equals(password))
+		            {
+		            	user = new User();
+		            	user.setEmail(email);
+		            	user.setFirstName(rs.getString(3));
+		            	user.setLastName(rs.getString(4));
+		            	user.setRole(rs.getString(2));	
+		            	user.setParish(rs.getString(5));
+		            	user.setParishName(rs.getString(6));
+		            }
+	            }	  
+	    } catch(Exception e){
+	      System.err.println(e);
+	    }
+		finally 
+		{	
+			try 
+			{				
+				stmt.close();
+				if(con != null){
+					con.close();
+				}
+			} 
+			catch(SQLException e) {}
+		}	 
+		 return user;     
+	    
+	  }	
+	
 	
 public static void testDb(User user) throws Exception{
 	    

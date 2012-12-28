@@ -1,5 +1,7 @@
 package com.iptf;
 
+
+
 public class User {	
 	public String getEmail() {
 		return email;
@@ -140,6 +142,15 @@ public class User {
 
 
 	
+	public String getParishName() {
+		return parishName;
+	}
+	public void setParishName(String parishName) {
+		this.parishName = parishName;
+	}
+
+
+
 	private String email;
 	private String altEmail;
 	private String password;
@@ -149,6 +160,7 @@ public class User {
 	private String lastName;
 	
 	private String parish;
+	private String parishName;
 	private String parishIndia;
 	private String familyName;
 	private String fatherName;
@@ -166,7 +178,6 @@ public class User {
 	
 	private String gender;
 	private String description;
-	
-	
+
 	
 }
