@@ -285,8 +285,8 @@ public static User validateUser(String email,String password){
 		User user = null;
 		
 		try{
-	         	con = getLocalConnection(); 	         	
-	         	stmt = con.prepareStatement("SELECT DECODE(PASSWORD,'ABCDEFG'),role_id,fname,lname,parish,parish_name FROM user u,parish p where email=? and u.parish= p.parish_id");	     
+	         	con = getConnection(); 	         	
+	         	stmt = con.prepareStatement("SELECT DECODE(password,'ABCDEFG'),role_id,fname,lname,parish,parish_name FROM user u,parish p where email=? and u.parish= p.parish_id");	     
 	         	stmt.setString(1, email);
 	            ResultSet rs = stmt.executeQuery();
 	            String pass = null;
