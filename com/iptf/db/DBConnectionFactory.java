@@ -13,9 +13,7 @@ import com.iptf.util.PropertyLoader;
 
 public class DBConnectionFactory {
 	static Logger logger = Logger.getLogger(DBConnectionFactory.class);
-	
-	
-		
+
 	public static Connection getConnection() throws ClassNotFoundException, SQLException, IOException{
 		Connection conn = null;
 		logger.debug("Trying to get connection");
@@ -54,9 +52,5 @@ public class DBConnectionFactory {
 		}
 		
 	}
-	
-	
-	
-	
 
 }
