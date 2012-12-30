@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.iptf.User;
+import com.iptf.db.model.User;
+
 
 public class DBManager {
 
