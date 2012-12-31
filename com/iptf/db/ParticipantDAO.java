@@ -20,6 +20,8 @@ public class ParticipantDAO {
 			"city, state, zip, home_phone, cell_phone, parish_india, role_id, gender, description, email, alt_email, photo_url)" +
 			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
+	public static final String DELETE_PARTICIPANT = "delete from participant where participant_id=?";
+	
 	public static final String UPDATE_PARTICIPANT_SQL = "update participant set " +
 				"fname =?,"+ 
 				"lname=?, "+
@@ -55,6 +57,8 @@ public class ParticipantDAO {
 			" values(?,?,?,?)";
 	
 	public final String DELETE_ALL_PARTICIPANT_PGM_SQL = "delete from participant_program where participant_id = ?";
+	
+	public final String DELETE_PARTICIPANT_PGM_SQL = "delete from participant_program where participant_id = ? and program_id = ?";
 	
 	public final String FIND_PARTICIPANT_PGM_SQL = "select participant_id, program_id, track_url, year " +
 			"from participant_program where participant_id = ?";
@@ -95,6 +99,34 @@ public class ParticipantDAO {
 					returnValue = rs.getInt(1);
 				}
 			}
+		} catch (Exception e) {
+			logger.error("Caught Exception: ", e);
+		}
+		finally{
+			if (conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	
+		return returnValue;
+		
+	}
+	
+	public int deleteParticipant(int pId){
+		
+		int returnValue = 0;
+		Connection conn = null;
+		try {
+			conn = DBConnectionFactory.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(INSERT_PARTICIPANT_SQL);
+			stmt.setInt(1, pId);
+			returnValue = stmt.executeUpdate();
+			
 		} catch (Exception e) {
 			logger.error("Caught Exception: ", e);
 		}
@@ -166,6 +198,8 @@ public class ParticipantDAO {
 		}
 		return p;
 	}
+	
+	
 	
 	public List<Participant> findParticipantsByParish(int parishId){
 		Connection conn = null;
@@ -335,6 +369,33 @@ public class ParticipantDAO {
 			}
 		}
 	}
+
+	public void removeProgramsFromParticipant(int participantId, int programId ){
+		
+		Connection conn = null;
+		try {
+			conn = DBConnectionFactory.getConnection();
+			
+			PreparedStatement stmt = conn.prepareStatement(DELETE_PARTICIPANT_PGM_SQL);
+			stmt.setInt(1, participantId);
+			stmt.setInt(2, programId);
+			int result = stmt.executeUpdate();
+			
+		} catch (Exception e) {
+			logger.error("Caught Exception: ", e);
+			e.printStackTrace();
+		}
+		finally{
+			if (conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 public List<ParticipantProgram> findParticipantPrograms(int participantId ){
 		
@@ -353,6 +414,7 @@ public List<ParticipantProgram> findParticipantPrograms(int participantId ){
 				pp.setProgramId(rs.getInt(2));
 				pp.setTrackUrl(rs.getString(3));
 				pp.setYear(rs.getInt(4));
+				ppList.add(pp);
 			}
 			
 		} catch (Exception e) {

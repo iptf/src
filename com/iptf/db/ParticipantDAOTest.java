@@ -84,17 +84,37 @@ public class ParticipantDAOTest {
 	@Test
 	public void testFindParticipantPrograms(){
 		ParticipantDAO pdao = new ParticipantDAO();
-		List <ParticipantProgram> ppList = pdao.findParticipantPrograms(2);
+		List <ParticipantProgram> ppList = pdao.findParticipantPrograms(3);
 		
-		assertTrue(ppList.size() == 3);
+		assertEquals(3,ppList.size());
 	}
 	
 	@Test
 	public void testRemoveAllProgramsFromParticipant(){
 		ParticipantDAO pdao = new ParticipantDAO();
-		Participant p = pdao.findParticipantById(3);
+		pdao.removeAllProgramsFromParticipant(3);
+		assertEquals( pdao.findParticipantPrograms(3).size(), 0);
+	
 		
-		assertTrue(p.getParticipantId() == 3);
+	}
+	
+	@Test
+	public void testRemoveProgramsFromParticipant(){
+		ParticipantDAO pdao = new ParticipantDAO();
+		ArrayList<ParticipantProgram> programs = new ArrayList<ParticipantProgram>();
+		ParticipantProgram p = new ParticipantProgram();
+		p.setParticipantId(3);
+		p.setProgramId(4);
+		p.setTrackUrl("");
+		p.setYear(2013);
+		programs.add(p);
+
+		pdao.addProgramsToParticipant(3, programs);
+		
+		int before = pdao.findParticipantPrograms(3).size();
+		pdao.removeProgramsFromParticipant(3, 4);
+		
+		assertEquals(pdao.findParticipantPrograms(3).size(), before-1);
 	}
 	
 	@Test
@@ -115,5 +135,8 @@ public class ParticipantDAOTest {
 		ParticipantDAO pdao = new ParticipantDAO();
 		
 		pdao.addProgramsToParticipant(3, programs);
+		
+		assertEquals(3,pdao.findParticipantPrograms(3).size());
+		
 	}
 }

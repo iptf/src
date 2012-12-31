@@ -10,6 +10,7 @@ public class PropertyLoader {
 	public  String dbPassowrd;
 	public  String dbUrl;
 	
+	
 	public String getDbUser() {
 		return dbUser;
 	}

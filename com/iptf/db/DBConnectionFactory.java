@@ -18,7 +18,7 @@ public class DBConnectionFactory {
 		Connection conn = null;
 		logger.debug("Trying to get connection");
 		Class.forName("com.mysql.jdbc.Driver");
-		PropertyLoader pl = PropertyLoader.getPropertyLoader().getPropertyLoader();
+		PropertyLoader pl = PropertyLoader.getPropertyLoader();
 		conn = DriverManager.getConnection(pl.getDbUrl(), pl.getDbUser(),  pl.getDbPassowrd());
 		
 		logger.debug("connected");

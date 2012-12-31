@@ -69,24 +69,26 @@ public class LoginFilter implements Filter {
 						try{
 							UserDAO udao = new UserDAO();
 							user = udao.validateUser(email,password);
+							if(user != null)
+							{
+								logger.info("Authenticated user: " + user.getEmail());
+								session.setAttribute("USER",user);
+								res.sendRedirect("index.jsp");
+							}
+							else
+							{
+								logger.error("Can't find user: " + email + " and password " + password);
+								message = "Invalid ID/Password";
+							}
 						}
 						catch(Exception e)
 						{
 							e.printStackTrace();
 							logger.error("Caught Exception while logging in: ", e);
-							message =  "Error:: " + e.getMessage();
-						}
-						
-						if(user != null)
-						{
-							logger.info("Authenticated user: " + user.getEmail());
-							session.setAttribute("USER",user);
-							res.sendRedirect("index.jsp");
-						}
-						else
-						{
-							logger.error("Can't find user: " + email + " and password " + password);
-							message = "Invalid ID/Password";
+							message =  "Database Error:: " + e.getMessage();
+							
+							//res.getOutputStream().println(message);
+							
 						}
 					}
 	
