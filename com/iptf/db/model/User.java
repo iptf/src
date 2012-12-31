@@ -39,10 +39,10 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getParish() {
+	public int getParish() {
 		return parish;
 	}
-	public void setParish(String parish) {
+	public void setParish(int parish) {
 		this.parish = parish;
 	}
 	public String getParishIndia() {
@@ -159,7 +159,7 @@ public class User {
 	private String firstName;
 	private String lastName;
 	
-	private String parish;
+	private int parish;
 	private String parishName;
 	private String parishIndia;
 	private String familyName;

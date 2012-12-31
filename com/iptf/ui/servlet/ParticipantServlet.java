@@ -2,12 +2,14 @@ package com.iptf.ui.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -35,8 +37,23 @@ public class ParticipantServlet extends HttpServlet {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		HttpServletResponse response) throws ServletException, IOException {
+		
+		logger.debug("doGet");
+		
+		String action = request.getParameter("leftMenu");
+		HttpSession session = request.getSession();
+		User user = (User)session.getAttribute("USER");
+		String nextJSP = "/listParticipants.jsp";
+		
+		if(action != null && action.equals("search")){
+			ParticipantDAO dao = new ParticipantDAO();
+			List<Participant> participants =  dao.findParticipantsByParish(user.getParish());
+			
+			request.setAttribute("participants",participants);
+		}
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+		dispatcher.forward(request,response);
 	}
 
 	/**
@@ -45,16 +62,30 @@ public class ParticipantServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		String nextJSP = "/participant.jsp";
+	String nextJSP = "/participant.jsp";
 		
 		String submitted = request.getParameter("submitted");
+		
+		Participant participant = null;
+		ArrayList objList = null;
+		String userId = request.getParameter("user");
+		User obj = null;
 
+		if (submitted != null && submitted.equals("true")) {
+			addParticipant(request);
+		}
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+		dispatcher.forward(request,response);
+		
+	}
+	
+	
+	private void addParticipant(HttpServletRequest request) {
 		String firstName = "";
 		String lastName = "";
 		String email = "";
 		String altEmail = "";
-		String role = "";
+		String role = "P";
 		String parish = "";
 		String parishIndia = "";
 
@@ -74,78 +105,68 @@ public class ParticipantServlet extends HttpServlet {
 		String gender = "";
 		String desc = "";
 
-		Participant participant = null;
-		ArrayList objList = null;
-		String userId = request.getParameter("user");
-		User obj = null;
+		Participant participant;
+		try {
 
-		if (submitted != null && submitted.equals("true")) {
-			try {
+			firstName = request.getParameter("firstName");
+			lastName = request.getParameter("lastName");
+			email = request.getParameter("email");
+			altEmail = request.getParameter("altEmail");
 
-				firstName = request.getParameter("firstName");
-				lastName = request.getParameter("lastName");
-				email = request.getParameter("email");
-				altEmail = request.getParameter("altEmail");
+			parish = request.getParameter("parish");
+			parishIndia = request.getParameter("parishIndia");
 
-				parish = request.getParameter("parish");
-				parishIndia = request.getParameter("parishIndia");
-				role = "C";
+			streetAddress = request.getParameter("streetAddress");
+			suite = request.getParameter("suite");
+			city = request.getParameter("city");
+			state = request.getParameter("state");
+			zip = request.getParameter("zip");
 
-				streetAddress = request.getParameter("streetAddress");
-				suite = request.getParameter("suite");
-				city = request.getParameter("city");
-				state = request.getParameter("state");
-				zip = request.getParameter("zip");
+			familyName = request.getParameter("familyName");
+			fatherName = request.getParameter("fatherName");
+			motherName = request.getParameter("motherName");
+			desc = request.getParameter("desc");
+			gender = request.getParameter("gender");
 
-				familyName = request.getParameter("familyName");
-				fatherName = request.getParameter("fatherName");
-				motherName = request.getParameter("motherName");
-				desc = request.getParameter("desc");
-				gender = request.getParameter("gender");
+			homePhone = request.getParameter("homePhone");
+			cellPhone = request.getParameter("cellPhone");
+			participant = new Participant();
+			participant.setFname(firstName);
+			participant.setLname(lastName);
+			int paridId = Integer.parseInt(parish);
+			participant.setParishId(paridId);
+			participant.setParishIndia(parishIndia);
 
-				homePhone = request.getParameter("homePhone");
-				cellPhone = request.getParameter("cellPhone");
-				participant = new Participant();
-				participant.setFname(firstName);
-				participant.setLname(lastName);
-				int paridId = Integer.parseInt(parish);
-				participant.setParishId(paridId);
-				participant.setParishIndia(parishIndia);
+			participant.setEmail(email);
+			participant.setAltEmail(altEmail);
+			participant.setRoleId(role);
+			participant.setFamilyName(familyName);
+			participant.setFatherName(fatherName);
+			participant.setMotherName(motherName);
 
-				participant.setEmail(email);
-				participant.setAltEmail(altEmail);
-				participant.setRoleId(role);
-				participant.setFamilyName(familyName);
-				participant.setFatherName(fatherName);
-				participant.setMotherName(motherName);
+			participant.setStreetAddress(streetAddress);
+			participant.setCity(city);
+			participant.setSuite(suite);
+			participant.setState(state);
+			participant.setZip(zip);
 
-				participant.setStreetAddress(streetAddress);
-				participant.setCity(city);
-				participant.setSuite(suite);
-				participant.setState(state);
-				participant.setZip(zip);
+			participant.setHomePhone(homePhone);
+			participant.setCellPhone(cellPhone);
 
-				participant.setHomePhone(homePhone);
-				participant.setCellPhone(cellPhone);
+			participant.setDescription(desc);
+			participant.setGender(gender);
+			
+			request.setAttribute("participant", participant);
 
-				participant.setDescription(desc);
-				participant.setGender(gender);
-				
-				request.setAttribute("participant", participant);
+			logger.debug("Adding participant: " + firstName);
+			ParticipantDAO dao = new ParticipantDAO();
+			dao.addParticipant(participant);
 
-				logger.debug("Adding participant: " + firstName);
-				ParticipantDAO dao = new ParticipantDAO();
-				dao.addParticipant(participant);
-
-				logger.debug("Added participant: " + firstName);
-				
-			} catch (Exception e) {
-				logger.error("Failed to add participant: ", e);
-			}
+			logger.debug("Added participant: " + firstName);
+			
+		} catch (Exception e) {
+			logger.error("Failed to add participant: ", e);
 		}
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
-		dispatcher.forward(request,response);
-		
 	}
 
 }

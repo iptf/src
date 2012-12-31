@@ -36,7 +36,7 @@ public User validateUser(String email,String password){
 		            	user.setFirstName(rs.getString(3));
 		            	user.setLastName(rs.getString(4));
 		            	user.setRole(rs.getString(2));	
-		            	user.setParish(rs.getString(5));
+		            	user.setParish(rs.getInt(5));
 		            	user.setParishName(rs.getString(6));
 		            }
 	            }	  
