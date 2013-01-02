@@ -29,7 +29,7 @@ public class ApplicationContextListener implements
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
-		InputStream is = this.getClass().getResourceAsStream ("log4j.properties");
+		InputStream is = this.getClass().getResourceAsStream ("/log4j.properties");
 		Properties props = 	new Properties();
 		try {
 			props.load(is);

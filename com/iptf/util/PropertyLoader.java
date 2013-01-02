@@ -49,7 +49,7 @@ public class PropertyLoader {
 	
 	public void loadProperties() throws IOException{
 		Properties props = 	new Properties();
-		InputStream is = this.getClass().getResourceAsStream ("iptf.properties");
+		InputStream is = this.getClass().getResourceAsStream ("/iptf.properties");
 		props.load(is);
 		dbUser = props.getProperty("db.user");
 		dbPassowrd = props.getProperty("db.password");

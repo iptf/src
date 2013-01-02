@@ -119,7 +119,7 @@ public class DBManager {
 	     
 	        	stmt.setString(1, user.getFirstName());
 		        stmt.setString(2, user.getLastName());
-		        stmt.setString(3, user.getParish());
+		        stmt.setInt(3, user.getParish());
 		        stmt.setString(4, user.getFamilyName());
 		        stmt.setString(5, user.getFatherName());
 		        stmt.setString(6, user.getMotherName());
@@ -229,7 +229,7 @@ public class DBManager {
 	     
 	        	stmt.setString(1, user.getFirstName());
 		        stmt.setString(2, user.getLastName());
-		        stmt.setString(3, user.getParish());
+		        stmt.setInt(3, user.getParish());
 		        stmt.setString(4, user.getFamilyName());
 		        stmt.setString(5, user.getFatherName());
 		        stmt.setString(6, user.getMotherName());
@@ -302,7 +302,7 @@ public static User validateUser(String email,String password){
 		            	user.setFirstName(rs.getString(3));
 		            	user.setLastName(rs.getString(4));
 		            	user.setRole(rs.getString(2));	
-		            	user.setParish(rs.getString(5));
+		            	user.setParish(rs.getInt(5));
 		            	user.setParishName(rs.getString(6));
 		            }
 	            }	  
@@ -342,7 +342,7 @@ public static void testDb(User user) throws Exception{
 	         	
 	        	stmt.setString(1, user.getFirstName());
 		        stmt.setString(2, user.getLastName());
-		        stmt.setString(3, user.getParish());		        
+		        stmt.setInt(3, user.getParish());		        
 		        stmt.setString(4, user.getRole());	
 		        stmt.setString(5, user.getEmail());
 		        stmt.executeUpdate();
